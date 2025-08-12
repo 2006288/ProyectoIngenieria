@@ -1,0 +1,5 @@
+1 Emilia_Stefania_Gómez_Carrillo Av.Ameria_310_Mañosca 032820585 esgomez@espe.edu.ec
+2 Juan_Andres_Perez_Lopez Calle_Amazonas_520_Iñaquito 0987654321 japerez@espe.edu.ec
+3 Maria_Isabel_Vargas_Torres Av.Patria_123_La_Paz 0991234567 mivargas@espe.edu.ec
+4 Carlos_Alberto_Ramirez_Garcia Av.6_de_Diciembre_789_El_Batan 0976543210 caramirez@espe.edu.ec
+5 Ana_Cristina_Silva_Mendoza Calle_Guayaquil_456_Centro_Historico 0965432109 acsilva@espe.edu.ec
