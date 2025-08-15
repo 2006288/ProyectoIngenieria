@@ -1,0 +1,8 @@
+Reporte de Puntualidad (Menor a Mayor Faltas)
+--------------------------------------------------
+Empleado: Juan Andres Perez Lopez Calle Amazonas 520 Iñaquito | Faltas Totales: 0
+Empleado: Carlos Alberto Ramirez Garcia Av.6 de Diciembre 789 El Batan | Faltas Totales: 0
+Empleado: Anthony Xavier Aimaca�a Zhizhpon Av.17 Julio | Faltas Totales: 0
+Empleado: Emilia Stefania Gómez Carrillo Av.Ameria 310 Mañosca | Faltas Totales: 3
+Empleado: Maria Isabel Vargas Torres Av.Patria 123 La Paz | Faltas Totales: 3
+Empleado: Ana Cristina Silva Mendoza Calle Guayaquil 456 Centro Historico | Faltas Totales: 3
