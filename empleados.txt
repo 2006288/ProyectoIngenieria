@@ -4,3 +4,4 @@
 4 Carlos_Alberto_Ramirez_Garcia Av.6_de_Diciembre_789_El_Batan 0976543210 caramirez@espe.edu.ec
 5 Ana_Cristina_Silva_Mendoza Calle_Guayaquil_456_Centro_Historico 0965432109 acsilva@espe.edu.ec
 6 Anthony_Xavier_Aimacaï¿½a_Zhizhpon Av.17_Julio 0967649556 anthonyescuela@gmail.com
+7 Anthony_Xavier Aimaca¤a_Zhizhpon Av.18_Jullio 0967649556 axaimacana@espe.edu.ec

@@ -25,6 +25,15 @@ struct RegistroHoras {
     std::chrono::system_clock::time_point timestamp;
 };
 
+// Estructura para el reporte final
+struct ReporteEmpleado {
+    int id;
+    std::string nombres;
+    std::string apellidos;
+    int faltas = 0;
+    double totalHoras = 0.0;
+};
+
 // Prototipos de funciones
 void cargarDatos(std::vector<Empleado>& empleados, std::vector<RegistroHoras>& registros);
 void registrarDatosPersonales(std::vector<Empleado>& empleados);
@@ -62,7 +71,7 @@ void mostrarMenu() {
         std::cout << "===============================" << std::endl;
         std::cout << "1.- Registrar nuevo empleado" << std::endl;
         std::cout << "2.- Mostrar registros de horas" << std::endl;
-        std::cout << "3.- Imprimir reporte de puntualidad (Mejores Empleados)" << std::endl;
+        std::cout << "3.- Imprimir reporte de Mejores Empleados" << std::endl;
         std::cout << "0.- Salir" << std::endl;
         std::cout << "===============================" << std::endl;
         std::cout << "Seleccione una opcion: ";
@@ -183,60 +192,89 @@ void mostrarHorasPorEmpleado(const std::vector<Empleado>& empleados, const std::
 }
 
 void imprimirReportePuntualidad(const std::vector<Empleado>& empleados, const std::vector<RegistroHoras>& registros) {
-    std::map<int, int> faltasPorEmpleado;
+    std::map<int, ReporteEmpleado> datosReporte;
 
+    // Inicializar datos del reporte con la información del empleado
     for (const auto& emp : empleados) {
-        faltasPorEmpleado[emp.id] = 0;
+        datosReporte[emp.id].id = emp.id;
+        datosReporte[emp.id].nombres = emp.nombres;
+        datosReporte[emp.id].apellidos = emp.apellidos;
+    }
+
+    // Calcular faltas y horas trabajadas
+    for (const auto& emp : empleados) {
         std::map<int, std::chrono::system_clock::time_point> primeraEntradaPorDia;
+        std::vector<RegistroHoras> registrosEmpleado;
 
         for (const auto& reg : registros) {
-            if (reg.id == emp.id && !reg.esSalida) {
-                std::time_t tiempo = std::chrono::system_clock::to_time_t(reg.timestamp);
-                std::tm* tm_local = std::localtime(&tiempo);
-                int diaDelAnio = tm_local->tm_yday;
+            if (reg.id == emp.id) {
+                registrosEmpleado.push_back(reg);
+                if (!reg.esSalida) { // Si es una entrada
+                    std::time_t tiempo = std::chrono::system_clock::to_time_t(reg.timestamp);
+                    std::tm* tm_local = std::localtime(&tiempo);
+                    int diaDelAnio = tm_local->tm_yday;
 
-                if (primeraEntradaPorDia.find(diaDelAnio) == primeraEntradaPorDia.end()) {
-                    primeraEntradaPorDia[diaDelAnio] = reg.timestamp;
-                } else {
-                    if (reg.timestamp < primeraEntradaPorDia[diaDelAnio]) {
+                    if (primeraEntradaPorDia.find(diaDelAnio) == primeraEntradaPorDia.end() || reg.timestamp < primeraEntradaPorDia[diaDelAnio]) {
                         primeraEntradaPorDia[diaDelAnio] = reg.timestamp;
                     }
                 }
             }
         }
 
+        // Contar faltas
         for (const auto& par : primeraEntradaPorDia) {
             std::time_t tiempo = std::chrono::system_clock::to_time_t(par.second);
             std::tm* tm_local = std::localtime(&tiempo);
             if (tm_local->tm_hour > 7 || (tm_local->tm_hour == 7 && tm_local->tm_min > 30)) {
-                faltasPorEmpleado[emp.id]++;
+                datosReporte[emp.id].faltas++;
+            }
+        }
+
+        // Calcular horas trabajadas
+        std::sort(registrosEmpleado.begin(), registrosEmpleado.end(), [](const RegistroHoras& a, const RegistroHoras& b) {
+            return a.timestamp < b.timestamp;
+        });
+
+        for (size_t i = 0; i < registrosEmpleado.size(); ++i) {
+            if (!registrosEmpleado[i].esSalida) { // Es una entrada
+                // Buscar la siguiente salida
+                for (size_t j = i + 1; j < registrosEmpleado.size(); ++j) {
+                    if (registrosEmpleado[j].esSalida) {
+                        auto diff = registrosEmpleado[j].timestamp - registrosEmpleado[i].timestamp;
+                        datosReporte[emp.id].totalHoras += std::chrono::duration<double, std::ratio<3600>>(diff).count();
+                        i = j; // Avanzar el índice principal para no re-contar
+                        break;
+                    }
+                }
             }
         }
     }
 
-    std::vector<std::pair<int, int>> empleadosOrdenados;
-    for (const auto& par : faltasPorEmpleado) {
-        empleadosOrdenados.push_back(par);
+    // Convertir el mapa a un vector para ordenarlo
+    std::vector<ReporteEmpleado> empleadosOrdenados;
+    for (const auto& par : datosReporte) {
+        empleadosOrdenados.push_back(par.second);
     }
 
+    // Ordenar segun el criterio: menos faltas, luego más horas
     std::sort(empleadosOrdenados.begin(), empleadosOrdenados.end(),
-              [](const std::pair<int, int>& a, const std::pair<int, int>& b) {
-                  return a.second < b.second; // Orden ascendente por faltas
+              [](const ReporteEmpleado& a, const ReporteEmpleado& b) {
+                  if (a.faltas != b.faltas) {
+                      return a.faltas < b.faltas; // Menos faltas es mejor
+                  }
+                  return a.totalHoras > b.totalHoras; // Más horas es mejor
               });
 
-    std::cout << "\n--- Reporte de Puntualidad (Menor a Mayor Faltas) ---" << std::endl;
-    std::cout << std::left << std::setw(5) << "ID" << std::setw(20) << "Nombres" << std::setw(20) << "Apellidos" << std::setw(10) << "Faltas" << std::endl;
-    std::cout << "----------------------------------------------------" << std::endl;
-    for (const auto& par : empleadosOrdenados) {
-        for (const auto& emp : empleados) {
-            if (emp.id == par.first) {
-                std::cout << std::left << std::setw(5) << emp.id
-                          << std::setw(20) << restaurarEspacios(emp.nombres)
-                          << std::setw(20) << restaurarEspacios(emp.apellidos)
-                          << std::setw(10) << par.second << std::endl;
-                break;
-            }
-        }
+    // Imprimir el reporte
+    std::cout << "\n--- Reporte de Mejores Empleados ---" << std::endl;
+    std::cout << std::left << std::setw(5) << "ID" << std::setw(40) << "Empleado" << std::setw(40) << "Direccion" << std::setw(20)<< "Faltas" << std::setw(15) << "Horas Trab." << std::endl;
+    std::cout << "---------------------------------------------------------------------" << std::endl;
+    for (const auto& emp : empleadosOrdenados) {
+        std::cout << std::left << std::setw(5) << emp.id
+                  << std::setw(40) << restaurarEspacios(emp.nombres)
+                  << std::setw(40) << restaurarEspacios(emp.apellidos)
+                  << std::setw(20) << emp.faltas
+                  << std::fixed << std::setprecision(2) << std::setw(15) << emp.totalHoras << std::endl;
     }
-    std::cout << "----------------------------------------------------" << std::endl;
+    std::cout << "---------------------------------------------------------------------" << std::endl;
 }
