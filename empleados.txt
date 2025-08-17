@@ -1,7 +1,10 @@
-1 Emilia_Stefania_Gómez_Carrillo Av.Ameria_310_Mañosca 032820585 esgomez@espe.edu.ec
-2 Juan_Andres_Perez_Lopez Calle_Amazonas_520_Iñaquito 0987654321 japerez@espe.edu.ec
-3 Maria_Isabel_Vargas_Torres Av.Patria_123_La_Paz 0991234567 mivargas@espe.edu.ec
-4 Carlos_Alberto_Ramirez_Garcia Av.6_de_Diciembre_789_El_Batan 0976543210 caramirez@espe.edu.ec
-5 Ana_Cristina_Silva_Mendoza Calle_Guayaquil_456_Centro_Historico 0965432109 acsilva@espe.edu.ec
-6 Anthony_Xavier_Aimaca�a_Zhizhpon Av.17_Julio 0967649556 anthonyescuela@gmail.com
-7 Anthony_Xavier Aimaca�a_Zhizhpon Av.18_Jullio 0967649556 axaimacana@espe.edu.ec
+0 Emilia_Stefania_Gómez_Carrillo Av.Ameria_310_Mañosca 032820585 esgomez@espe.edu.ec
+1 Juan_Andres_Perez_Lopez Calle_Amazonas_520_Iñaquito 0987654321 japerez@espe.edu.ec
+2 Maria_Isabel_Vargas_Torres Av.Patria_123_La_Paz 0991234567 mivargas@espe.edu.ec
+3 Carlos_Alberto_Ramirez_Garcia Av.6_de_Diciembre_789_El_Batan 0976543210 caramirez@espe.edu.ec
+4 Ana_Cristina_Silva_Mendoza Calle_Guayaquil_456_Centro_Historico 0965432109 acsilva@espe.edu.ec
+5 Anthony_Xavier Aimacaa_Zhizhpon Av.17_Jullio 0967649556 axaimacana@espe.edu.ec
+6 Luis_Miguel_Gonzalez_Fernandez Av.Colon_1010_Mariscal_Sucre 0987654321 lmgonzalez@espe.edu.ec
+7 Laura_Sofia_Martinez_Sanchez Calle_la_Pradera_202_Bellavista 0998765432 lsmartinez@espe.edu.ec
+8 Francisco_Javier_Diaz_Romero Av.Republica_505_La_Carolina 0976543210 fjdiaz@espe.edu.ec
+9 Valentina_Isabella_Ruiz_Jimenez Calle_los_Shyris_3030_Parque_la_Carolina 0965432109 viruiz@espe.edu.ec

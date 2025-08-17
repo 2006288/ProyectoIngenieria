@@ -41,9 +41,13 @@ void cargarDatos(vector<Empleado>& empleados, vector<RegistroHoras>& registros);
 void registrarDatosPersonales(vector<Empleado>& empleados);
 void mostrarHorasPorEmpleado(const vector<Empleado>& empleados, const vector<RegistroHoras>& registros);
 void imprimirReportePuntualidad(const vector<Empleado>& empleados, const vector<RegistroHoras>& registros);
+void registrarEntrada();
+void registrarSalida();
 void mostrarMenu();
 string reemplazarEspacios(string texto);
 string restaurarEspacios(string texto);
+void solicitarDatos(Empleado& empleado);
+
 
 /**
  * @brief Convierte componentes de fecha y hora en un objeto time_point.
@@ -86,8 +90,10 @@ void mostrarMenu() {
         cout << "SISTEMA CONTROL DE EMPLEADOS" << endl;
         cout << "===============================" << endl;
         cout << "1.- Registrar nuevo empleado" << endl;
-        cout << "2.- Mostrar registros de horas" << endl;
-        cout << "3.- Imprimir reporte de Mejores Empleados" << endl;
+        cout << "2.- Registrar entrada" << endl;
+        cout << "3.- Registrar salida" << endl;
+        cout << "4.- Mostrar registros de horas" << endl;
+        cout << "5.- Imprimir reporte de Mejores Empleados" << endl;
         cout << "0.- Salir" << endl;
         cout << "===============================" << endl;
         cout << "Seleccione una opcion: ";
@@ -101,9 +107,15 @@ void mostrarMenu() {
                 cargarDatos(empleados, registros);
                 break;
             case 2:
-                mostrarHorasPorEmpleado(empleados, registros);
+                registrarEntrada();
                 break;
             case 3:
+                registrarSalida();
+                break;
+            case 4:
+                mostrarHorasPorEmpleado(empleados, registros);
+                break;
+            case 5:
                 imprimirReportePuntualidad(empleados, registros);
                 break;
             case 0:
@@ -176,16 +188,46 @@ void cargarDatos(vector<Empleado>& empleados, vector<RegistroHoras>& registros) 
  */
 void solicitarDatos(Empleado& empleado) {
     cin.ignore();
-    cout << "Ingrese los dos Nombres: ";
-    getline(cin, empleado.nombres);
-    cout << "Ingrese los dos Apellidos: ";
-    getline(cin, empleado.apellidos);
-    cout << "Ingrese la direccion: ";
-    getline(cin, empleado.direccion);
-    cout << "Ingrese el telefono: ";
-    getline(cin, empleado.telefono);
-    cout << "Ingrese el correo: ";
-    getline(cin, empleado.correo);
+
+    do {
+        cout << "Ingrese los dos Nombres (max 60 caracteres): ";
+        getline(cin, empleado.nombres);
+        if (reemplazarEspacios(empleado.nombres).length() > 60) {
+            cout << "Error: El nombre no puede tener mas de 60 caracteres." << endl;
+        }
+    } while (reemplazarEspacios(empleado.nombres).length() > 60);
+
+    do {
+        cout << "Ingrese los dos Apellidos (max 60 caracteres): ";
+        getline(cin, empleado.apellidos);
+        if (reemplazarEspacios(empleado.apellidos).length() > 60) {
+            cout << "Error: El apellido no puede tener mas de 60 caracteres." << endl;
+        }
+    } while (reemplazarEspacios(empleado.apellidos).length() > 60);
+
+    do {
+        cout << "Ingrese la direccion (max 100 caracteres): ";
+        getline(cin, empleado.direccion);
+        if (reemplazarEspacios(empleado.direccion).length() > 100) {
+            cout << "Error: La direccion no puede tener mas de 100 caracteres." << endl;
+        }
+    } while (reemplazarEspacios(empleado.direccion).length() > 100);
+
+    do {
+        cout << "Ingrese el telefono (exactamente 10 digitos): ";
+        getline(cin, empleado.telefono);
+        if (empleado.telefono.length() != 10) {
+            cout << "Error: El telefono debe tener exactamente 10 digitos." << endl;
+        }
+    } while (empleado.telefono.length() != 10);
+
+    do {
+        cout << "Ingrese el correo (max 20 caracteres): ";
+        getline(cin, empleado.correo);
+        if (empleado.correo.length() > 20) {
+            cout << "Error: El correo no puede tener mas de 20 caracteres." << endl;
+        }
+    } while (empleado.correo.length() > 20);
 }
 
 /**
@@ -211,6 +253,55 @@ void registrarDatosPersonales(vector<Empleado>& empleados) {
         cerr << "Error: No se pudo abrir el archivo empleados.txt para escribir." << endl;
     }
 }
+
+/**
+ * @brief Registra una entrada para un empleado.
+ */
+void registrarEntrada() {
+    int id;
+    cout << "Ingrese el ID del empleado: ";
+    cin >> id;
+
+    ofstream archivo("horas.txt", ios::app);
+    if (archivo.is_open()) {
+        auto now = chrono::system_clock::now();
+        time_t now_time = chrono::system_clock::to_time_t(now);
+        tm* ltm = localtime(&now_time);
+
+        archivo << id << " 0 "
+                << ltm->tm_hour << ":" << ltm->tm_min << " "
+                << ltm->tm_mday << "/" << 1 + ltm->tm_mon << "/" << 1900 + ltm->tm_year << endl;
+        cout << "Entrada registrada correctamente." << endl;
+        archivo.close();
+    } else {
+        cerr << "Error: No se pudo abrir el archivo horas.txt para escribir." << endl;
+    }
+}
+
+/**
+ * @brief Registra una salida para un empleado.
+ */
+void registrarSalida() {
+    int id;
+    cout << "Ingrese el ID del empleado: ";
+    cin >> id;
+
+    ofstream archivo("horas.txt", ios::app);
+    if (archivo.is_open()) {
+        auto now = chrono::system_clock::now();
+        time_t now_time = chrono::system_clock::to_time_t(now);
+        tm* ltm = localtime(&now_time);
+
+        archivo << id << " 1 "
+                << ltm->tm_hour << ":" << ltm->tm_min << " "
+                << ltm->tm_mday << "/" << 1 + ltm->tm_mon << "/" << 1900 + ltm->tm_year << endl;
+        cout << "Salida registrada correctamente." << endl;
+        archivo.close();
+    } else {
+        cerr << "Error: No se pudo abrir el archivo horas.txt para escribir." << endl;
+    }
+}
+
 
 /**
  * @brief Muestra todos los registros de horas (entradas y salidas) para cada empleado.
@@ -330,4 +421,3 @@ void imprimirReportePuntualidad(const vector<Empleado>& empleados, const vector<
     }
     cout << "---------------------------------------------------------------------" << endl;
 }
-
