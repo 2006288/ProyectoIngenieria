@@ -41,9 +41,10 @@ void cargarDatos(vector<Empleado>& empleados, vector<RegistroHoras>& registros);
 void registrarDatosPersonales(vector<Empleado>& empleados);
 void mostrarHorasPorEmpleado(const vector<Empleado>& empleados, const vector<RegistroHoras>& registros);
 void imprimirReportePuntualidad(const vector<Empleado>& empleados, const vector<RegistroHoras>& registros);
-void registrarEntrada();
-void registrarSalida();
+void registrarEntrada(const vector<Empleado>& empleados);
+void registrarSalida(const vector<Empleado>& empleados);
 void mostrarMenu();
+bool verificarEmpleado(int id, const vector<Empleado>& empleados);
 string reemplazarEspacios(string texto);
 string restaurarEspacios(string texto);
 void solicitarDatos(Empleado& empleado);
@@ -107,10 +108,10 @@ void mostrarMenu() {
                 cargarDatos(empleados, registros);
                 break;
             case 2:
-                registrarEntrada();
+                registrarEntrada(empleados);
                 break;
             case 3:
-                registrarSalida();
+                registrarSalida(empleados);
                 break;
             case 4:
                 mostrarHorasPorEmpleado(empleados, registros);
@@ -255,12 +256,32 @@ void registrarDatosPersonales(vector<Empleado>& empleados) {
 }
 
 /**
+ * @brief Verifica si un empleado con el ID dado existe.
+ * @param id El ID del empleado a verificar.
+ * @param empleados El vector de empleados cargados.
+ * @return `true` si el empleado existe, `false` en caso contrario.
+ */
+bool verificarEmpleado(int id, const vector<Empleado>& empleados) {
+    for (const auto& emp : empleados) {
+        if (emp.id == id) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * @brief Registra una entrada para un empleado.
  */
-void registrarEntrada() {
+void registrarEntrada(const vector<Empleado>& empleados) {
     int id;
     cout << "Ingrese el ID del empleado: ";
     cin >> id;
+
+    if (!verificarEmpleado(id, empleados)) {
+        cout << "Error: ID de empleado no encontrado." << endl;
+        return;
+    }
 
     ofstream archivo("horas.txt", ios::app);
     if (archivo.is_open()) {
@@ -281,10 +302,15 @@ void registrarEntrada() {
 /**
  * @brief Registra una salida para un empleado.
  */
-void registrarSalida() {
+void registrarSalida(const vector<Empleado>& empleados) {
     int id;
     cout << "Ingrese el ID del empleado: ";
     cin >> id;
+
+    if (!verificarEmpleado(id, empleados)) {
+        cout << "Error: ID de empleado no encontrado." << endl;
+        return;
+    }
 
     ofstream archivo("horas.txt", ios::app);
     if (archivo.is_open()) {
